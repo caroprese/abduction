@@ -1,0 +1,3 @@
+{insert_r(a,y_1_1(q,a)), insert_r(y_1_1(p,a),b), arbitraryExplanation}
+
+{insert_r(a,b), constrainedExplanation}

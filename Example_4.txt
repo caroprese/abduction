@@ -1,0 +1,62 @@
+#maxint = 100.
+
+% P --------------------------------------------------------------
+% p(a):- r(X,b).
+% q(a):- r(a,X).
+
+% O --------------------------------------------------------------
+% p(a).
+% q(a).
+
+% Rew(O) ---------------------------------------------------------
+p_(a).
+q_(a).
+
+% Rew(P) ---------------------------------------------------------
+p_1(a):- p_(a).
+r_(y_1_1(p,a),b):- p_1(a).
+arbitrary(y_1_1(p,a)):-p_1(a).
+
+q_1(a):- q_(a).
+r_(a,y_1_1(q,a)):- q_1(a).
+arbitrary(y_1_1(q,a)):-q_1(a).
+
+
+% Const(T) ------------------------------------------------------------------
+constant(a).
+constant(b).
+
+% Unification(T) ------------------------------------------------------------
+term(X):-constant(X).
+term(X):-arbitrary(X).
+candidate(X,X) :- term(X).
+
+candidate(X_1,Y_1) :- r_(X_1,X_2),r_(Y_1,Y_2),arbitrary(X_1),constant(Y_1),compatible(X_2,Y_2).
+candidate(X_2,Y_2) :- r_(X_1,X_2),r_(Y_1,Y_2),arbitrary(X_2),constant(Y_2),compatible(X_1,Y_1).
+
+compatible(X,X):-term(X).
+compatible(X,Y):-compatible(Y,X).
+compatible(X,Y):-assign(X,Z),assign(Y,Z).
+compatible(X,Y):-arbitrary(X), constant(Y), not incompatible(X,Y).
+incompatible(X,Y):-arbitrary(X), constant(Y), assign(X,Z), Y!=Z.
+
+discard(X,Y) v discard(X,Z):-candidate(X,Y),candidate(X,Z),Y!=Z.
+assign(X,Y):-candidate(X,Y),not discard(X,Y).
+:-assign(X,Y),assign(X,Z),Y!=Z.
+
+r_(Y_1,Y_2) :-r_(X_1,X_2),assign(X_1,Y_1),assign(X_2,Y_2).
+
+% Constrained(T) ------------------------------------------------------------
+evaluated(X):-assign(X,Y),not arbitrary(Y).
+unevaluated(X):-term(X),not evaluated(X).
+
+arbitraryExplanation:-unevaluated(X).
+constrainedExplanation:-not arbitraryExplanation.
+
+% Update(T) -----------------------------------------------------------------
+insert_r(Y_1,Y_2) :-r_(X_1,X_2),assign(X_1,Y_1),assign(X_2,Y_2),not r(Y_1,Y_2).
+
+
+
+
+

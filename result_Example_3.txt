@@ -1,0 +1,8 @@
+{arbitraryExplanation, insert_t(a,y_1_2(p,a)), insert_r(a,c,y_1_2(p,a))}
+
+{insert_q(a,y_1_1(p,a)), arbitraryExplanation, insert_t(a,y_1_2(p,a)), insert_r(a,y_1_1(p,a),y_1_2(p,a))}
+
+{arbitraryExplanation, insert_t(a,y_1_2(p,a)), insert_r(a,b,y_1_2(p,a))}
+
+{insert_t(a,c), constrainedExplanation}
+

@@ -1,0 +1,84 @@
+#maxint = 100.
+
+% In this program '^*' has been replaced with '_'
+% B ------------------------------------------------------------------
+q(a,b).
+q(a,c).
+r(a,b,c).
+
+% P --------------------------------------------------------------
+% p(X)    :- q(X,Y),s(X,Y,Z).
+% s(X,Y,Z):- r(X,Y,Z),t(X,Z).
+
+% O --------------------------------------------------------------
+% p(a).
+
+% Rew(B) -----------------------------------------------------------------------
+q_(a,b).
+q_(a,c).
+r_(a,b,c).
+
+% Rew(O) -------------------------------------------------------------
+p_(a).
+
+% Rew(P) ---------------------------------------------------------------
+% Rewriting of: p(X) :- q(X,Y),s(X,Y,Z).
+p_1(X) :- p_(X).
+q_(X,y_1_1(p,X)) :- p_1(X).
+s_(X,y_1_1(p,X),y_1_2(p,X)) :- p_1(X).
+arbitrary(y_1_1(p,X)) :- p_1(X).
+arbitrary(y_1_2(p,X)) :- p_1(X).
+
+% Rewriting of: s(X,Y,Z) :- r(X,Y,Z),t(X,Z).
+s_1(X,Y,Z):- s_(X,Y,Z).
+r_(X,Y,Z):- s_1(X,Y,Z).
+t_(X,Z)  :- s_1(X,Y,Z).
+
+
+% Const(T) -----------------------------------------------------------------------------
+constant(a).
+constant(b).
+constant(c).
+
+% Unification(T) --------------------------------------
+term(X):-constant(X).
+term(X):-arbitrary(X).
+
+candidate(X,X) :- term(X).
+
+candidate(X_1,Y_1) :-r_(X_1,X_2,X_3),r_(Y_1,Y_2,Y_3),arbitrary(X_1),constant(Y_1),compatible(X_2,Y_2),compatible(X_3,Y_3).
+candidate(X_2,Y_2) :-r_(X_1,X_2,X_3),r_(Y_1,Y_2,Y_3),arbitrary(X_2),constant(Y_2),compatible(X_1,Y_1),compatible(X_3,Y_3).
+candidate(X_3,Y_3) :-r_(X_1,X_2,X_3),r_(Y_1,Y_2,Y_3),arbitrary(X_3),constant(Y_3),compatible(X_1,Y_1),compatible(X_2,Y_2).
+
+candidate(X_1,Y_1):-t_(X_1,X_2),t_(Y_1,Y_2),arbitrary(X_1),constant(Y_1),compatible(X_2,Y_2).
+candidate(X_2,Y_2):-t_(X_1,X_2),t_(Y_1,Y_2),arbitrary(X_2),constant(Y_2),compatible(X_1,Y_1).
+
+candidate(X_1,Y_1):-q_(X_1,X_2),q_(Y_1,Y_2),arbitrary(X_1),constant(Y_1),compatible(X_2,Y_2).
+candidate(X_2,Y_2):-q_(X_1,X_2),q_(Y_1,Y_2),arbitrary(X_2),constant(Y_2),compatible(X_1,Y_1).
+
+compatible(X,X):-term(X).
+compatible(X,Y):-compatible(Y,X).
+compatible(X,Y):-assign(X,Z),assign(Y,Z).
+compatible(X,Y):-arbitrary(X), constant(Y), not incompatible(X,Y).
+incompatible(X,Y):-arbitrary(X), constant(Y), assign(X,Z), Y!=Z.
+
+discard(X,Y) v discard(X,Z):-candidate(X,Y),candidate(X,Z),Y!=Z.
+assign(X,Y):-candidate(X,Y),not discard(X,Y).
+:-assign(X,Y),assign(X,Z),Y!=Z.
+
+r_(Y_1,Y_2,Y_3):- r_(X_1,X_2,X_3),assign(X_1,Y_1),assign(X_2,Y_2),assign(X_3,Y_3).
+t_(Y_1,Y_2)    :- t_(X_1,X_2),assign(X_1,Y_1),assign(X_2,Y_2).
+q_(Y_1,Y_2)    :- q_(X_1,X_2),assign(X_1,Y_1),assign(X_2,Y_2).
+
+% Constrained(T)-----------------------------------------------------------------
+evaluated(X):-assign(X,Y),not arbitrary(Y).
+unevaluated(X):-term(X),not evaluated(X).
+
+arbitraryExplanation:-unevaluated(X).
+constrainedExplanation:-not arbitraryExplanation.
+
+% Update(T)-----------------------------------------------------------------
+insert_r(Y_1,Y_2,Y_3):- r_(X_1,X_2,X_3),assign(X_1,Y_1),assign(X_2,Y_2),assign(X_3,Y_3),not r(Y_1,Y_2,Y_3).
+insert_t(Y_1,Y_2)    :- t_(X_1,X_2),assign(X_1,Y_1),assign(X_2,Y_2),not t(Y_1,Y_2).
+insert_q(Y_1,Y_2)    :- q_(X_1,X_2),assign(X_1,Y_1),assign(X_2,Y_2),not q(Y_1,Y_2).
+

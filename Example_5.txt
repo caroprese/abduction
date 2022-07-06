@@ -1,0 +1,81 @@
+#maxint = 100.
+
+% In this program '^*' has been replaced with '_'
+% B ------------------------------------------------------------------
+p(a).
+p(b).
+
+% P --------------------------------------------------------------
+
+% o :- m(X), n(Y). 
+% n(X) :- p(X), s(X).
+% m(X) :- p(X), s(X).
+
+% O --------------------------------------------------------------
+% o.
+
+% Rew(B) -----------------------------------------------------------------------
+p_(a).
+p_(b).
+
+% Rew(O) -------------------------------------------------------------
+o_.
+
+% Rew(P) ---------------------------------------------------------------
+% Rewriting of: o :- m(X),n(Y).
+o_1:-o_.
+m_(y_1_1(o)):-o_1.
+n_(y_1_2(o)):-o_1.
+arbitrary(y_1_1(o)) :- o_1.
+arbitrary(y_1_2(o)) :- o_1.
+
+% Rewriting of: n(X) :- p(X), s(X)
+n_1(X) :- n_(X).
+p_(X) :- n_1(X).
+s_(X) :- n_1(X).
+
+% Rewriting of: m(X) :- p(X), s(X)
+m_1(X) :- m_(X).
+p_(X) :- m_1(X).
+s_(X) :- m_1(X).
+
+
+% Const(T) -----------------------------------------------------------------------------
+constant(a).
+constant(b).
+
+% Unification(T) --------------------------------------
+term(X):-constant(X).
+term(X):-arbitrary(X).
+
+candidate(X,X) :- term(X).
+
+candidate(X_1,Y_1) :-p_(X_1),p_(Y_1),arbitrary(X_1),constant(Y_1).
+candidate(X_1,Y_1) :-s_(X_1),s_(Y_1),arbitrary(X_1),constant(Y_1).
+
+compatible(X,X):-term(X).
+compatible(X,Y):-compatible(Y,X).
+compatible(X,Y):-assign(X,Z),assign(Y,Z).
+compatible(X,Y):-arbitrary(X), constant(Y), not incompatible(X,Y).
+incompatible(X,Y):-arbitrary(X), constant(Y), assign(X,Z), Y!=Z.
+
+discard(X,Y) v discard(X,Z):-candidate(X,Y),candidate(X,Z),Y!=Z.
+assign(X,Y):-candidate(X,Y),not discard(X,Y).
+:-assign(X,Y),assign(X,Z),Y!=Z.
+
+p_(Y_1)    :- p_(X_1),assign(X_1,Y_1).
+s_(Y_1)    :- s_(X_1),assign(X_1,Y_1).
+m_(Y_1)    :- m_(X_1),assign(X_1,Y_1).
+n_(Y_1)    :- n_(X_1),assign(X_1,Y_1).
+
+% Constrained(T)-----------------------------------------------------------------
+evaluated(X):-assign(X,Y),not arbitrary(Y).
+unevaluated(X):-term(X),not evaluated(X).
+
+arbitraryExplanation:-unevaluated(X).
+constrainedExplanation:-not arbitraryExplanation.
+
+% Update(T)-----------------------------------------------------------------
+insert_p(Y_1)    :- p_(X_1),assign(X_1,Y_1),not p(Y_1).
+insert_s(Y_1)    :- s_(X_1),assign(X_1,Y_1),not s(Y_1).
+

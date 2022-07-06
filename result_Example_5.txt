@@ -1,0 +1,17 @@
+{insert_s(b), constrainedExplanation}
+
+{insert_s(b), insert_s(a), constrainedExplanation}
+
+{insert_p(y_1_1(o)), arbitraryExplanation, insert_s(y_1_1(o)), insert_s(b)}
+
+{insert_s(b), insert_s(a), constrainedExplanation}
+
+{insert_s(a), constrainedExplanation}
+
+{insert_p(y_1_1(o)), arbitraryExplanation, insert_s(y_1_1(o)), insert_s(a)}
+
+{insert_p(y_1_2(o)), arbitraryExplanation, insert_s(b), insert_s(y_1_2(o))}
+
+{insert_p(y_1_2(o)), arbitraryExplanation, insert_s(a), insert_s(y_1_2(o))}
+
+{insert_p(y_1_1(o)), insert_p(y_1_2(o)), arbitraryExplanation, insert_s(y_1_1(o)), insert_s(y_1_2(o))}
