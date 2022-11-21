@@ -1,7 +1,7 @@
 ## Computing Abductive Explanations 
 *Luciano Caroprese, Ester Zumpano, Bart Bogaerts*
 
-This repository contains what is needed to run the experiments related to *Examples 3* and *Example 4* reported in the paper and the full proof of Theorem 2.  
+This repository contains what is needed to run the experiments related to *Examples 3* and *Example 4* reported in the paper and the proof of Theorem 2.  
 It contains the following files: 
 
 - *dlv.mingw-odbc.exe*  
