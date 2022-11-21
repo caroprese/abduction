@@ -17,5 +17,5 @@ It contains the following files:
 - *result_Example_3.txt*, *result_Example_4.txt*, *result_Example_5.txt*   
   The abductive explanations.
 - *Appendix.pdf*    
-  The appendix of the article containing the proof of Theorem 2.
+  The appendix of the paper containing the proof of Theorem 2.
 
